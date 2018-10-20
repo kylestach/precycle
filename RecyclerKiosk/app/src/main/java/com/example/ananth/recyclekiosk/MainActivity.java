@@ -177,6 +177,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, CameraActivity.class));
             }
         });
+        helpFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Intent.ACTION_VOICE_COMMAND)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            }
+        });
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
