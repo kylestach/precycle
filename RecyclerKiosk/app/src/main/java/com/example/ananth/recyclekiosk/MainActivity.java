@@ -30,6 +30,10 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar xpProgressBar;
     private ValueAnimator animator;
     private boolean rotatedFab;
+    private ValueAnimator cameraUpAnimator,
+            cameraDownAnimator,
+            helpUpAnimator,
+            helpDownAnimator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +70,33 @@ public class MainActivity extends AppCompatActivity {
         rotatedFab = false;
         final FloatingActionButton menuFAB = findViewById(R.id.fabMain);
         menuFAB.setSize(FloatingActionButton.SIZE_NORMAL);
+
+        final FloatingActionButton cameraFab = findViewById(R.id.fabCamera);
+        final FloatingActionButton helpFab = findViewById(R.id.fabHelp);
+
+        cameraFab.setAlpha(0f);
+        helpFab.setAlpha(0f);
+        final ValueAnimator alphaVisibleAnimater = ValueAnimator.ofFloat(0f, 1f);
+        alphaVisibleAnimater.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                cameraFab.setAlpha((float) animation.getAnimatedValue());
+                helpFab.setAlpha((float) animation.getAnimatedValue());
+            }
+        });
+        final ValueAnimator alphaInvisibleAnimater = ValueAnimator.ofFloat(1f, 0f);
+        alphaInvisibleAnimater.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                cameraFab.setAlpha((float) animation.getAnimatedValue());
+                helpFab.setAlpha((float) animation.getAnimatedValue());
+            }
+        });
+
         menuFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(rotatedFab){
+                if (rotatedFab) {
                     final OvershootInterpolator interpolator = new OvershootInterpolator();
                     ViewCompat.animate(menuFAB).
                             rotation(0f).
@@ -78,8 +105,50 @@ public class MainActivity extends AppCompatActivity {
                             setInterpolator(interpolator).
                             start();
                     rotatedFab = false;
-                }
-                else{
+                    alphaVisibleAnimater.cancel();
+                    alphaInvisibleAnimater.start();
+                    cameraUpAnimator.cancel();
+                    cameraDownAnimator.start();
+                    helpUpAnimator.cancel();
+                    helpDownAnimator.start();
+                } else {
+                    if (cameraUpAnimator == null) {
+                        float cameraYOffset = menuFAB.getY() - cameraFab.getY();
+                        cameraFab.setTranslationY(cameraYOffset);
+                        float helpYOffset = menuFAB.getY() - helpFab.getY();
+                        helpFab.setTranslationY(helpYOffset);
+                        cameraFab.setAlpha(0f);
+                        helpFab.setAlpha(0f);
+
+                        cameraUpAnimator = ValueAnimator.ofFloat(cameraYOffset, 0f);
+                        cameraUpAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                cameraFab.setTranslationY((float) animation.getAnimatedValue());
+                            }
+                        });
+                        cameraDownAnimator = ValueAnimator.ofFloat(0f, cameraYOffset);
+                        cameraDownAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                cameraFab.setTranslationY((float) animation.getAnimatedValue());
+                            }
+                        });
+                        helpUpAnimator = ValueAnimator.ofFloat(helpYOffset, 0f);
+                        helpUpAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                helpFab.setTranslationY((float) animation.getAnimatedValue());
+                            }
+                        });
+                        helpDownAnimator = ValueAnimator.ofFloat(0f, helpYOffset);
+                        helpDownAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                helpFab.setTranslationY((float) animation.getAnimatedValue());
+                            }
+                        });
+                    }
                     final OvershootInterpolator interpolator = new OvershootInterpolator();
                     ViewCompat.animate(menuFAB).
                             rotation(135f).
@@ -88,6 +157,12 @@ public class MainActivity extends AppCompatActivity {
                             setInterpolator(interpolator).
                             start();
                     rotatedFab = true;
+                    alphaInvisibleAnimater.cancel();
+                    alphaVisibleAnimater.start();
+                    cameraDownAnimator.cancel();
+                    cameraUpAnimator.start();
+                    helpDownAnimator.cancel();
+                    helpUpAnimator.start();
                 }
             }
         });
