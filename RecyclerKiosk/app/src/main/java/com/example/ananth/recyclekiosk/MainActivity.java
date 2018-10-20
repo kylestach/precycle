@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar xpProgressBar;
     private ValueAnimator animator;
     private boolean rotatedFab;
+
     private ValueAnimator cameraUpAnimator,
             cameraDownAnimator,
             helpUpAnimator,
@@ -99,20 +100,22 @@ public class MainActivity extends AppCompatActivity {
         grayView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final OvershootInterpolator interpolator = new OvershootInterpolator();
-                ViewCompat.animate(menuFAB).
-                        rotation(0f).
-                        withLayer().
-                        setDuration(300).
-                        setInterpolator(interpolator).
-                        start();
-                rotatedFab = false;
-                alphaVisibleAnimator.cancel();
-                alphaInvisibleAnimator.start();
-                cameraUpAnimator.cancel();
-                cameraDownAnimator.start();
-                helpUpAnimator.cancel();
-                helpDownAnimator.start();
+                if(rotatedFab) {
+                    final OvershootInterpolator interpolator = new OvershootInterpolator();
+                    ViewCompat.animate(menuFAB).
+                            rotation(0f).
+                            withLayer().
+                            setDuration(300).
+                            setInterpolator(interpolator).
+                            start();
+                    rotatedFab = false;
+                    alphaVisibleAnimator.cancel();
+                    alphaInvisibleAnimator.start();
+                    cameraUpAnimator.cancel();
+                    cameraDownAnimator.start();
+                    helpUpAnimator.cancel();
+                    helpDownAnimator.start();
+                }
             }
         });
         menuFAB.setOnClickListener(new View.OnClickListener() {
