@@ -57,7 +57,8 @@ Example Response:
 ```json
 {
   "type": "compost",
-  "points": 5
+  "points": 5,
+  "description": "This is how you recycle compost. Lorem ipsum dolor iset..."
 }
 ```
 
