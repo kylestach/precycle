@@ -1,6 +1,7 @@
 package com.example.ananth.recyclekiosk;
 
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -13,6 +14,8 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    ProgressBar xpProgressBar;
-    ValueAnimator animator;
+    private ProgressBar xpProgressBar;
+    private ValueAnimator animator;
 
 
     @Override
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                xpProgressBar.setProgress((int)animation.getAnimatedValue());
+                xpProgressBar.setProgress((int) animation.getAnimatedValue());
             }
         });
         //xpProgressBar.setProgress(50);
@@ -50,16 +53,24 @@ public class MainActivity extends AppCompatActivity {
         ViewPager pager = findViewById(R.id.mainViewPager);
         ScreenSlidePagerAdapter adapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
-
+        ImageView cameraImageView = findViewById(R.id.cameraImage);
+        cameraImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, CameraActivity.class));
+            }
+        });
 
     }
+
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         List<ScoreItem> tempData;
+
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
             tempData = new ArrayList<>();
             for (int i = 0; i < 20; i++) {
-                tempData.add(new ScoreItem("Score "+i,i));
+                tempData.add(new ScoreItem("Score " + i, i));
             }
         }
 
@@ -67,6 +78,12 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             PersonalScoreFragment fragment = new PersonalScoreFragment();
             fragment.setDataset(tempData);
+            if (position == 0) {
+                fragment.setTitle("My Items");
+            }
+            if (position == 1) {
+                fragment.setTitle("Leaderboard");
+            }
             return fragment;
         }
 

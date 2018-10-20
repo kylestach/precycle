@@ -37,7 +37,7 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.scoreTextView.setText(mDataset.get(i).getScore()+"");
         viewHolder.titleTextView.setText(mDataset.get(i).getTitle());
-        setAnimation(viewHolder.layout, i);
+        //setAnimation(viewHolder.layout, i);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ViewHolder> 
         // If the bound view wasn't previously displayed on screen, it's animated
         if (position > lastPosition)
         {
-            Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+            Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }

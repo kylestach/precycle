@@ -9,11 +9,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
 public class PersonalScoreFragment extends Fragment {
     private List<ScoreItem> dataset;
+    private String title;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -24,6 +28,8 @@ public class PersonalScoreFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
+        TextView scoreTitle = rootView.findViewById(R.id.scoreTitle);
+        scoreTitle.setText(title);
         return rootView;
     }
     public static PersonalScoreFragment create(List<ScoreItem> dataset){
@@ -34,5 +40,9 @@ public class PersonalScoreFragment extends Fragment {
 
     public void setDataset(List<ScoreItem> dataset) {
         this.dataset = dataset;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

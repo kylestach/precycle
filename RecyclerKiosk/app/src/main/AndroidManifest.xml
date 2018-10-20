@@ -18,12 +18,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"/>
+        <activity android:name=".CameraActivity"
+            android:screenOrientation="portrait"/>
     </application>
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="true" />
