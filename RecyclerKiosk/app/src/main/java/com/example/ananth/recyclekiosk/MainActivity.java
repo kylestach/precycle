@@ -64,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
         rotatedFab = false;
         final FloatingActionButton menuFAB = findViewById(R.id.fabMain);
         menuFAB.setSize(FloatingActionButton.SIZE_NORMAL);
-
+        final View grayView = findViewById(R.id.grayView);
+        grayView.setAlpha(0f);
         final FloatingActionButton cameraFab = findViewById(R.id.fabCamera);
         final FloatingActionButton helpFab = findViewById(R.id.fabHelp);
         final TextView cameraLabel = findViewById(R.id.scanLabel);
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 helpFab.setAlpha((float) animation.getAnimatedValue());
                 cameraLabel.setAlpha((float) animation.getAnimatedValue());
                 helpLabel.setAlpha((float) animation.getAnimatedValue());
+                grayView.setAlpha(((float) animation.getAnimatedValue())/2);
             }
         });
         final ValueAnimator alphaInvisibleAnimator = ValueAnimator.ofFloat(1f, 0f);
@@ -91,9 +93,28 @@ public class MainActivity extends AppCompatActivity {
                 helpFab.setAlpha((float) animation.getAnimatedValue());
                 cameraLabel.setAlpha((float) animation.getAnimatedValue());
                 helpLabel.setAlpha((float) animation.getAnimatedValue());
+                grayView.setAlpha(((float) animation.getAnimatedValue())/2);
             }
         });
-
+        grayView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final OvershootInterpolator interpolator = new OvershootInterpolator();
+                ViewCompat.animate(menuFAB).
+                        rotation(0f).
+                        withLayer().
+                        setDuration(300).
+                        setInterpolator(interpolator).
+                        start();
+                rotatedFab = false;
+                alphaVisibleAnimator.cancel();
+                alphaInvisibleAnimator.start();
+                cameraUpAnimator.cancel();
+                cameraDownAnimator.start();
+                helpUpAnimator.cancel();
+                helpDownAnimator.start();
+            }
+        });
         menuFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
