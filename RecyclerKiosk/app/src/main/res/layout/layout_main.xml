@@ -136,7 +136,7 @@
         android:focusable="true"
         android:scaleX="1.1"
         android:scaleY="1.1"
-        android:src="@drawable/outline_camera_white_18dp"
+        android:src="@drawable/outline_chat_white_18dp"
         app:fabSize="mini"
         app:layout_constraintBottom_toTopOf="@+id/fabCamera"
         app:layout_constraintEnd_toEndOf="@+id/fabMain"
@@ -153,7 +153,7 @@
         android:focusable="true"
         android:scaleX="1.1"
         android:scaleY="1.1"
-        android:src="@drawable/outline_camera_white_18dp"
+        android:src="@drawable/outline_camera_alt_white_18dp"
         app:fabSize="mini"
         app:layout_constraintBottom_toTopOf="@+id/fabMain"
         app:layout_constraintEnd_toEndOf="@+id/fabMain"
@@ -188,7 +188,8 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/fabCamera"
         app:layout_constraintEnd_toStartOf="@+id/fabCamera"
-        app:layout_constraintTop_toTopOf="@+id/fabCamera" />
+        app:layout_constraintTop_toTopOf="@+id/fabCamera"
+        android:elevation="3dp"/>
 
     <TextView
         android:id="@+id/chatLabel"
@@ -200,5 +201,6 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/fabHelp"
         app:layout_constraintEnd_toStartOf="@+id/fabHelp"
-        app:layout_constraintTop_toTopOf="@+id/fabHelp" />
+        app:layout_constraintTop_toTopOf="@+id/fabHelp"
+        android:elevation="3dp"/>
 </android.support.constraint.ConstraintLayout>
