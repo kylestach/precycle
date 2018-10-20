@@ -1,5 +1,6 @@
 package com.example.ananth.recyclekiosk;
 
+import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -20,6 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    ProgressBar xpProgressBar;
+    ValueAnimator animator;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,8 +32,21 @@ public class MainActivity extends AppCompatActivity {
         TextView name = findViewById(R.id.nameTextView);
         name.setText(DataManager.user.getName());
         getSupportActionBar().hide();
-        ProgressBar xpProgressBar = findViewById(R.id.xpProgressBar);
+        xpProgressBar = findViewById(R.id.xpProgressBar);
+        //xpProgressBar.setScaleY(2.0f);
+        animator = ValueAnimator.ofInt(0, 50);
+        animator.setDuration(1000);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                xpProgressBar.setProgress((int)animation.getAnimatedValue());
+            }
+        });
+        //xpProgressBar.setProgress(50);
         xpProgressBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.buzzYellow), PorterDuff.Mode.SRC_IN);
+        xpProgressBar.setProgress(0);
+        animator.setStartDelay(1000);
+        animator.start();
         ViewPager pager = findViewById(R.id.mainViewPager);
         ScreenSlidePagerAdapter adapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
