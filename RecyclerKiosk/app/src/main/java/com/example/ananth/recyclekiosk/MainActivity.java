@@ -83,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
                 helpFab.setAlpha((float) animation.getAnimatedValue());
                 cameraLabel.setAlpha((float) animation.getAnimatedValue());
                 helpLabel.setAlpha((float) animation.getAnimatedValue());
+                if((float)animation.getAnimatedValue()==0) {
+                    grayView.setVisibility(View.VISIBLE);
+                }
                 grayView.setAlpha(((float) animation.getAnimatedValue())/2);
             }
         });
@@ -95,6 +98,9 @@ public class MainActivity extends AppCompatActivity {
                 cameraLabel.setAlpha((float) animation.getAnimatedValue());
                 helpLabel.setAlpha((float) animation.getAnimatedValue());
                 grayView.setAlpha(((float) animation.getAnimatedValue())/2);
+                if((float)animation.getAnimatedValue()==0) {
+                    grayView.setVisibility(View.GONE);
+                }
             }
         });
         grayView.setOnClickListener(new View.OnClickListener() {
