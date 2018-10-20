@@ -142,7 +142,7 @@ public class SignIn extends AppCompatActivity {
                 e.printStackTrace();
             }
             if (uri != null) {
-                Toast.makeText(this, "nfc enabled: " + uri.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, "nfc enabled: " + uri.toString(), Toast.LENGTH_LONG).show();
                 signInProgress.setVisibility(View.VISIBLE);
                 signInTextView.setVisibility(View.GONE);
                 NetworkManager.getUserInfo("https://stats.dev.hack.gt/api/user/"+uri.toString().substring(uri.toString()
