@@ -20,7 +20,7 @@ public class PersonalScoreFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.personal_score_layout, container, false);
         RecyclerView recyclerView = rootView.findViewById(R.id.scoreRecyclerView);
-        ScoreAdapter adapter = new ScoreAdapter(dataset);
+        ScoreAdapter adapter = new ScoreAdapter(dataset,getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
