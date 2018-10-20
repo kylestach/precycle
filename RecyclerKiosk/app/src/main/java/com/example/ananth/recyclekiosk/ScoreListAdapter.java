@@ -14,18 +14,27 @@ import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.ViewHolder> {
     private List<ScorePageModel> mDataset;
     private Context context;
-    public ScoreListAdapter(List<ScorePageModel> list, Context context) {
+    private boolean searching;
+    public ScoreListAdapter(Context context) {
+        mDataset = new ArrayList<>();
+        this.context = context;
+        searching = true;
+    }
+    public ScoreListAdapter(List<ScorePageModel>list, Context context) {
         mDataset = list;
         this.context = context;
+        searching = false;
     }
     public void setData(List<ScorePageModel> list){
         mDataset = list;
         notifyDataSetChanged();
+        searching = false;
     }
 
     @NonNull
@@ -40,6 +49,14 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.View
         viewHolder.scoreRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         viewHolder.scoreRecyclerView.setAdapter(mDataset.get(i).getScoreAdapter());
         viewHolder.titleTextView.setText(mDataset.get(i).getTitle());
+        if(searching){
+            viewHolder.scoreRecyclerView.setVisibility(View.GONE);
+            viewHolder.progressBar.setVisibility(View.VISIBLE);
+        }
+        else{
+            viewHolder.scoreRecyclerView.setVisibility(View.VISIBLE);
+            viewHolder.progressBar.setVisibility(View.GONE);
+        }
         //setAnimation(viewHolder.layout, i);
     }
 
