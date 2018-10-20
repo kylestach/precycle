@@ -6,15 +6,18 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ProgressBar;
@@ -26,7 +29,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private ProgressBar xpProgressBar;
     private ValueAnimator animator;
-
+    private boolean rotatedFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +63,34 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, CameraActivity.class));
             }
         });
-
+        rotatedFab = false;
+        final FloatingActionButton menuFAB = findViewById(R.id.fabMain);
+        menuFAB.setSize(FloatingActionButton.SIZE_NORMAL);
+        menuFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(rotatedFab){
+                    final OvershootInterpolator interpolator = new OvershootInterpolator();
+                    ViewCompat.animate(menuFAB).
+                            rotation(0f).
+                            withLayer().
+                            setDuration(300).
+                            setInterpolator(interpolator).
+                            start();
+                    rotatedFab = false;
+                }
+                else{
+                    final OvershootInterpolator interpolator = new OvershootInterpolator();
+                    ViewCompat.animate(menuFAB).
+                            rotation(135f).
+                            withLayer().
+                            setDuration(300).
+                            setInterpolator(interpolator).
+                            start();
+                    rotatedFab = true;
+                }
+            }
+        });
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
