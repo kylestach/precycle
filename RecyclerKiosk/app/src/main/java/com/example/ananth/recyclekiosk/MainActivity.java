@@ -23,6 +23,8 @@ import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.yarolegovich.discretescrollview.DiscreteScrollView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,15 +60,25 @@ public class MainActivity extends AppCompatActivity {
         xpProgressBar.setProgress(0);
         animator.setStartDelay(1000);
         animator.start();
-        ViewPager pager = findViewById(R.id.mainViewPager);
+        //ViewPager pager = findViewById(R.id.mainViewPager);
+        DiscreteScrollView pager = findViewById(R.id.mainViewPager);
         ScreenSlidePagerAdapter adapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        pager.setAdapter(adapter);
-
+        //pager.setAdapter(adapter);
+        List<ScoreItem> tempData = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            tempData.add(new ScoreItem("Score " + i, i));
+        }
+        List<ScorePageModel> modelList = new ArrayList<>();
+        modelList.add(new ScorePageModel(new ScoreAdapter(tempData, MainActivity.this),"Breakdown"));
+        modelList.add(new ScorePageModel(new ScoreAdapter(tempData, MainActivity.this),"Leaderboard"));
+        pager.setAdapter(new ScoreListAdapter(modelList, MainActivity.this));
+        pager.setOverScrollEnabled(true);
         rotatedFab = false;
         final FloatingActionButton menuFAB = findViewById(R.id.fabMain);
         menuFAB.setSize(FloatingActionButton.SIZE_NORMAL);
         final View grayView = findViewById(R.id.grayView);
         grayView.setAlpha(0f);
+        grayView.setVisibility(View.GONE);
         final FloatingActionButton cameraFab = findViewById(R.id.fabCamera);
         final FloatingActionButton helpFab = findViewById(R.id.fabHelp);
         final TextView cameraLabel = findViewById(R.id.scanLabel);
