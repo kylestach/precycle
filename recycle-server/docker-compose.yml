@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  recycle_server:
+    image: recycle-server
+    ports:
+      - "80:8000"
+
+
