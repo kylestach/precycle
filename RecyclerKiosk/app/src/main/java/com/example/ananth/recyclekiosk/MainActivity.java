@@ -60,36 +60,37 @@ public class MainActivity extends AppCompatActivity {
         ViewPager pager = findViewById(R.id.mainViewPager);
         ScreenSlidePagerAdapter adapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
-        ImageView cameraImageView = findViewById(R.id.cameraImage);
-        cameraImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, CameraActivity.class));
-            }
-        });
+
         rotatedFab = false;
         final FloatingActionButton menuFAB = findViewById(R.id.fabMain);
         menuFAB.setSize(FloatingActionButton.SIZE_NORMAL);
 
         final FloatingActionButton cameraFab = findViewById(R.id.fabCamera);
         final FloatingActionButton helpFab = findViewById(R.id.fabHelp);
-
+        final TextView cameraLabel = findViewById(R.id.scanLabel);
+        final TextView helpLabel = findViewById(R.id.chatLabel);
         cameraFab.setAlpha(0f);
         helpFab.setAlpha(0f);
-        final ValueAnimator alphaVisibleAnimater = ValueAnimator.ofFloat(0f, 1f);
-        alphaVisibleAnimater.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        cameraLabel.setAlpha(0f);
+        helpLabel.setAlpha(0f);
+        final ValueAnimator alphaVisibleAnimator = ValueAnimator.ofFloat(0f, 1f);
+        alphaVisibleAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 cameraFab.setAlpha((float) animation.getAnimatedValue());
                 helpFab.setAlpha((float) animation.getAnimatedValue());
+                cameraLabel.setAlpha((float) animation.getAnimatedValue());
+                helpLabel.setAlpha((float) animation.getAnimatedValue());
             }
         });
-        final ValueAnimator alphaInvisibleAnimater = ValueAnimator.ofFloat(1f, 0f);
-        alphaInvisibleAnimater.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        final ValueAnimator alphaInvisibleAnimator = ValueAnimator.ofFloat(1f, 0f);
+        alphaInvisibleAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 cameraFab.setAlpha((float) animation.getAnimatedValue());
                 helpFab.setAlpha((float) animation.getAnimatedValue());
+                cameraLabel.setAlpha((float) animation.getAnimatedValue());
+                helpLabel.setAlpha((float) animation.getAnimatedValue());
             }
         });
 
@@ -105,8 +106,8 @@ public class MainActivity extends AppCompatActivity {
                             setInterpolator(interpolator).
                             start();
                     rotatedFab = false;
-                    alphaVisibleAnimater.cancel();
-                    alphaInvisibleAnimater.start();
+                    alphaVisibleAnimator.cancel();
+                    alphaInvisibleAnimator.start();
                     cameraUpAnimator.cancel();
                     cameraDownAnimator.start();
                     helpUpAnimator.cancel();
@@ -125,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onAnimationUpdate(ValueAnimator animation) {
                                 cameraFab.setTranslationY((float) animation.getAnimatedValue());
+                                cameraLabel.setTranslationY((float) animation.getAnimatedValue());
                             }
                         });
                         cameraDownAnimator = ValueAnimator.ofFloat(0f, cameraYOffset);
@@ -132,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onAnimationUpdate(ValueAnimator animation) {
                                 cameraFab.setTranslationY((float) animation.getAnimatedValue());
+                                cameraLabel.setTranslationY((float) animation.getAnimatedValue());
                             }
                         });
                         helpUpAnimator = ValueAnimator.ofFloat(helpYOffset, 0f);
@@ -139,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onAnimationUpdate(ValueAnimator animation) {
                                 helpFab.setTranslationY((float) animation.getAnimatedValue());
+                                helpLabel.setTranslationY((float) animation.getAnimatedValue());
                             }
                         });
                         helpDownAnimator = ValueAnimator.ofFloat(0f, helpYOffset);
@@ -146,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onAnimationUpdate(ValueAnimator animation) {
                                 helpFab.setTranslationY((float) animation.getAnimatedValue());
+                                helpLabel.setTranslationY((float) animation.getAnimatedValue());
                             }
                         });
                     }
@@ -157,13 +162,19 @@ public class MainActivity extends AppCompatActivity {
                             setInterpolator(interpolator).
                             start();
                     rotatedFab = true;
-                    alphaInvisibleAnimater.cancel();
-                    alphaVisibleAnimater.start();
+                    alphaInvisibleAnimator.cancel();
+                    alphaVisibleAnimator.start();
                     cameraDownAnimator.cancel();
                     cameraUpAnimator.start();
                     helpDownAnimator.cancel();
                     helpUpAnimator.start();
                 }
+            }
+        });
+        cameraFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, CameraActivity.class));
             }
         });
     }

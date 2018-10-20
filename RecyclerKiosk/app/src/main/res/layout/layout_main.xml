@@ -41,15 +41,6 @@
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="@+id/textView" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:src="@drawable/outline_camera_white_18dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/cameraImage"/>
     <ProgressBar
         android:id="@+id/backProgressBar"
         style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
@@ -149,4 +140,27 @@
         app:rippleColor="#FFFFFF"
         android:scaleX="1.1"
         android:scaleY="1.1"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="Scan"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/fabCamera"
+        app:layout_constraintEnd_toStartOf="@+id/fabCamera"
+        app:layout_constraintTop_toTopOf="@+id/fabCamera"
+        android:id="@+id/scanLabel"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="Chat"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/fabHelp"
+        app:layout_constraintEnd_toStartOf="@+id/fabHelp"
+        app:layout_constraintTop_toTopOf="@+id/fabHelp"
+        android:id="@+id/chatLabel"/>
 </android.support.constraint.ConstraintLayout>
