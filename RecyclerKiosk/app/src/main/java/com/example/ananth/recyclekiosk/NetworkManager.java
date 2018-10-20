@@ -27,7 +27,7 @@ public class NetworkManager {
     public static void getUserInfo(final String uri) {
         retrievingUser = true;
         final Request request = new Request.Builder()
-                .header("User-Agent","Bob")
+                .header("User-Agent","Chrome")
                 .url(uri)
                 .build();
 
