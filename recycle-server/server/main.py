@@ -13,7 +13,7 @@ r = redis.from_url(redis_url, decode_responses=True)
 app = Flask(__name__)
 
 GOOGLE_PROJECT_ID = 'parkrecycle-220001'
-GOOGLE_MODEL_ID = 'plastic_bottles_v20181020165932'
+GOOGLE_MODEL_ID = 'ICN8112082385550945410'
 
 
 classification_categories = {
@@ -101,8 +101,14 @@ def detect_image():
     data = request.json
     image_bytes = base64.b64decode(data['image']['image_bytes'])
     prediction = get_prediction(image_bytes, GOOGLE_PROJECT_ID, GOOGLE_MODEL_ID)
-    print(prediction)
-    return jsonify({'detected': prediction.payload['display_name']})
+    
+    fields = []
+    for field in prediction.payload:
+        fields.append((field.classification.score, field.display_name))
+
+    fields.sort()
+
+    return jsonify({'detected': fields[-1][1]})
 
 @app.route('/leaderboard')
 def route_leaderboard():

@@ -7,6 +7,7 @@ def get_prediction(content, project_id, model_id):
     prediction_client = automl.PredictionServiceClient()
 
     name = 'projects/{}/locations/us-central1/models/{}'.format(project_id, model_id)
+    print("name: %s" %(name))
     payload = {'image': {'image_bytes': content}}
     params = {}
     request = prediction_client.predict(name, payload, params)
