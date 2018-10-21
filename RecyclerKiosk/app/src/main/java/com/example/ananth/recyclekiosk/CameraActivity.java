@@ -115,7 +115,7 @@ public class CameraActivity extends AppCompatActivity {
                 }).show();
 
                 //byte[] stuff = Base64.encode(jpeg, Base64.NO_PADDING);
-                NetworkManager.getClassification(jpeg, -1, new ClassificationCallback() {
+                NetworkManager.getClassification(jpeg, kioskID, new ClassificationCallback() {
                     @Override
                     public void onError(Exception e) {
 
