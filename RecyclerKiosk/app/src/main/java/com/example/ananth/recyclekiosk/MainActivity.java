@@ -33,8 +33,10 @@ import android.widget.TextView;
 
 import com.rbrooks.indefinitepagerindicator.IndefinitePagerIndicator;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.observers.DisposableObserver;
 
@@ -42,11 +44,30 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar xpProgressBar;
     private ValueAnimator animator;
     private boolean rotatedFab;
-
+    private TextView xpTextView;
     private ValueAnimator cameraUpAnimator,
             cameraDownAnimator,
             helpUpAnimator,
             helpDownAnimator;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        xpTextView.setText(NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getHasPoints())+"/"+NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getLevelPoints()));
+        animator = ValueAnimator.ofInt(0, (int) (100*((double)DataManager.user.getHasPoints())/DataManager.user.getLevelPoints()));
+        animator.setDuration(1000);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                xpProgressBar.setProgress((int) animation.getAnimatedValue());
+            }
+        });
+        //xpProgressBar.setProgress(50);
+
+        xpProgressBar.setProgress(0);
+        animator.setStartDelay(1000);
+        animator.start();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +77,16 @@ public class MainActivity extends AppCompatActivity {
         TextView name = findViewById(R.id.nameTextView);
         name.setText(DataManager.user.getName());
         getSupportActionBar().hide();
+        TextView levelTextView = findViewById(R.id.levelTextView);
+        levelTextView.setText(DataManager.user.getLevel()+"");
+        xpTextView = findViewById(R.id.xpTextView);
+        xpTextView.setText(NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getHasPoints())+"/"+NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getLevelPoints()));
         xpProgressBar = findViewById(R.id.xpProgressBar);
+        xpProgressBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.buzzYellow), PorterDuff.Mode.SRC_IN);
         //xpProgressBar.setScaleY(2.0f);
-        animator = ValueAnimator.ofInt(0, 50);
+       /*
+
+        animator = ValueAnimator.ofInt(0, (int) (100*((double)DataManager.user.getHasPoints())/DataManager.user.getLevelPoints()));
         animator.setDuration(1000);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -67,10 +95,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //xpProgressBar.setProgress(50);
-        xpProgressBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.buzzYellow), PorterDuff.Mode.SRC_IN);
+
         xpProgressBar.setProgress(0);
         animator.setStartDelay(1000);
-        animator.start();
+        animator.start();*/
         //ViewPager pager = findViewById(R.id.mainViewPager);
         RecyclerView recyclerView = findViewById(R.id.mainViewPager);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));

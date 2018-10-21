@@ -64,6 +64,10 @@ public class CameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_layout);
         getSupportActionBar().hide();
+        TextView name = findViewById(R.id.nameTextView);
+        name.setText(DataManager.user.getName());
+        final TextView levelTextView = findViewById(R.id.levelTextView);
+        levelTextView.setText(DataManager.user.getLevel()+"");
         cameraView = findViewById(R.id.camera);
         cameraView.setLifecycleOwner(this);
         cameraView.mapGesture(Gesture.PINCH, GestureAction.ZOOM);
@@ -141,6 +145,13 @@ public class CameraActivity extends AppCompatActivity {
                                         }
                                     });
                                     animator.start();
+                                    DataManager.user.setHasPoints(DataManager.user.getHasPoints()+1);
+                                    if(DataManager.user.getHasPoints()==DataManager.user.getLevelPoints()){
+                                        DataManager.user.setLevel(DataManager.user.getLevel()+1);
+                                        DataManager.user.setHasPoints(0);
+                                        DataManager.user.setLevelPoints((int) (Math.pow(3.5*2,DataManager.user.getLevel()-1))+1);
+                                        levelTextView.setText(DataManager.user.getLevel()+"");
+                                    }
                                 }
                                 else{
                                     layout.findViewById(R.id.pointsText).setVisibility(View.GONE);

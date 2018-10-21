@@ -5,6 +5,31 @@ import java.util.List;
 public class User {
     private String name, email, school, major, id;
     private List<ScoreItem> scoreItems;
+    private int level, levelPoints, hasPoints;
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getLevelPoints() {
+        return levelPoints;
+    }
+
+    public void setLevelPoints(int levelPoints) {
+        this.levelPoints = levelPoints;
+    }
+
+    public int getHasPoints() {
+        return hasPoints;
+    }
+
+    public void setHasPoints(int hasPoints) {
+        this.hasPoints = hasPoints;
+    }
 
     public List<ScoreItem> getScoreItems() {
         return scoreItems;
