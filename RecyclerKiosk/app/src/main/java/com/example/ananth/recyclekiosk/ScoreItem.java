@@ -24,4 +24,14 @@ public class ScoreItem {
     public void setScore(int score) {
         this.score = score;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof ScoreItem){
+            return ((ScoreItem) obj).title.equals(title);
+        }
+        else{
+            return false;
+        }
+    }
 }
