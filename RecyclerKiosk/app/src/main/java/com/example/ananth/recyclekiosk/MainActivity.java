@@ -252,12 +252,40 @@ public class MainActivity extends AppCompatActivity {
         cameraFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final OvershootInterpolator interpolator = new OvershootInterpolator();
+                ViewCompat.animate(menuFAB).
+                        rotation(0f).
+                        withLayer().
+                        setDuration(300).
+                        setInterpolator(interpolator).
+                        start();
+                rotatedFab = false;
+                alphaVisibleAnimator.cancel();
+                alphaInvisibleAnimator.start();
+                cameraUpAnimator.cancel();
+                cameraDownAnimator.start();
+                helpUpAnimator.cancel();
+                helpDownAnimator.start();
                 startActivity(new Intent(MainActivity.this, CameraActivity.class));
             }
         });
         helpFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final OvershootInterpolator interpolator = new OvershootInterpolator();
+                ViewCompat.animate(menuFAB).
+                        rotation(0f).
+                        withLayer().
+                        setDuration(300).
+                        setInterpolator(interpolator).
+                        start();
+                rotatedFab = false;
+                alphaVisibleAnimator.cancel();
+                alphaInvisibleAnimator.start();
+                cameraUpAnimator.cancel();
+                cameraDownAnimator.start();
+                helpUpAnimator.cancel();
+                helpDownAnimator.start();
                 startActivity(new Intent(Intent.ACTION_VOICE_COMMAND)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             }
