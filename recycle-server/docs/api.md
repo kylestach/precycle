@@ -38,7 +38,7 @@ Example Response:
    ],
    "total_points": 111,
    "level": 5,
-   "level_required_points": 53
+   "level_required_points": 504
 }
 ```
 
