@@ -9,7 +9,7 @@
 
 fqdn=40.85.160.98
 
-rsync -avh --progress docker-compose.yml "oscar@$fqdn:recycle-server/"
+rsync -avh --progress docker-compose.yml secrets "oscar@$fqdn:recycle-server/"
 
 ssh -fNL localhost:2374:/var/run/docker.sock "oscar@$fqdn" &
 ssh_pid=$1
