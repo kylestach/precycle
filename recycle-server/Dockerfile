@@ -17,5 +17,5 @@ EXPOSE 8000
 
 ENV PYTHONUNBUFFERED=TRUE
 
-CMD ["gunicorn", "-b", "0.0.0.0:8000", "-w", "2", "--log-level=info", "server.main:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:8000", "-w", "4", "--log-level=info", "server.main:app"]
 

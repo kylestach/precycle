@@ -41,7 +41,7 @@ classification_categories = {
 }
 disposal_categories = ['compost', 'trash', 'aluminum', 'plastic']
 disposal_category_points = {'compost': 3, 'trash': 1, 'aluminum': 2, 'plastic': 2}
-disposal_category_names = {'compost': 'Compost', 'trash': 'Trash', 'aluminum': 'Aluminum', 'plastic': 'Plastic'}
+disposal_category_names = {'compost': 'Compost', 'trash': 'Landfill', 'aluminum': 'Metal', 'plastic': 'Plastic'}
 
 
 app.logger.info('Starting...')
@@ -82,6 +82,9 @@ def increment_user_points(user_id, points, category):
     for entry in data['disposal_types']:
         if entry['name'] == category:
             entry['points'] += points
+            break
+    else:
+        data['disposal_types'].append({'name': category, 'points': points})
 
     points = data.get('total_points') + points
     level = data.get('level', 1)
