@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar xpProgressBar;
     private ValueAnimator animator;
     private boolean rotatedFab;
-    private TextView xpTextView, levelTextView;
+    private TextView xpTextView, levelTextView, levelUpTextView;
     private ScoreAdapter leaderboard, breakdown;
     private View blueView;
     private ValueAnimator cameraUpAnimator,
@@ -87,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
         animator.setStartDelay(1000);
         animator.start();
         mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
+        if(DataManager.levelUp){
+            animateLevelUp();
+            DataManager.levelUp = false;
+        }
     }
 
     @Override
@@ -99,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         levelTextView = findViewById(R.id.levelTextView);
         levelTextView.setText(DataManager.user.getLevel() + "");
+        levelUpTextView = findViewById(R.id.levelUpTextView);
+        levelUpTextView.setVisibility(View.GONE);
         xpTextView = findViewById(R.id.xpTextView);
         xpTextView.setText(NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getHasPoints()) + "/" + NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getLevelPoints()));
         xpProgressBar = findViewById(R.id.xpProgressBar);
@@ -240,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (rotatedFab) {
-                    animateLevelUp();
+                    //animateLevelUp();
                     final OvershootInterpolator interpolator = new OvershootInterpolator();
                     ViewCompat.animate(menuFAB).
                             rotation(0f).
@@ -451,15 +457,18 @@ public class MainActivity extends AppCompatActivity {
         int mWidth = this.getResources().getDisplayMetrics().widthPixels/2;
         int mHeight = this.getResources().getDisplayMetrics().heightPixels/2;
         float xOffset = mWidth - levelTextView.getX()-levelTextView.getWidth()/2;
-        float yOffset = mHeight - levelTextView.getY()-levelTextView.getHeight();
+        float yOffset = mHeight - levelTextView.getY()-2*levelTextView.getHeight();
         blueView.setVisibility(View.VISIBLE);
         blueView.setAlpha(0f);
+        levelUpTextView.setVisibility(View.VISIBLE);
+        levelUpTextView.setAlpha(0f);
         final ValueAnimator blueIn = ValueAnimator.ofFloat(0f,1f);
         blueIn.setDuration(1000);
         blueIn.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 blueView.setAlpha((float)animation.getAnimatedValue());
+                levelUpTextView.setAlpha((float)animation.getAnimatedValue());
             }
         });
         final ValueAnimator blueOut = ValueAnimator.ofFloat(1f,0f);
@@ -469,6 +478,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 blueView.setAlpha((float)animation.getAnimatedValue());
+                levelUpTextView.setAlpha((float)animation.getAnimatedValue());
             }
         });
         ValueAnimator xAnimate = ValueAnimator.ofFloat(0, xOffset);
