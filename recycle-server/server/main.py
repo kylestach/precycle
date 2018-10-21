@@ -72,12 +72,16 @@ def set_kiosk_lights(kiosk_id, disposal_category, valid_for=5):
     r.set('kiosk_lights/{}'.format(kiosk_id), payload, ex=valid_for)
 
 
-def increment_user_points(user_id, points):
+def increment_user_points(user_id, points, category):
     data = r.get('user_stat/{}'.format(user_id))
     if data is None:
         return
 
     data = json.loads(data)
+
+    for entry in data['disposal_types']:
+        if entry['name'] == category:
+            entry['points'] += points
 
     points = data.get('total_points') + points
     level = data.get('level', 1)
@@ -155,7 +159,7 @@ def route_stats():
     data['disposal_types'] = disposal_types
 
     if 'level' in data:
-        data[''] = required_experience_for_level(data['level'])
+        data['level_required_points'] = required_experience_for_level(data['level'])
 
     return jsonify(data)
 
@@ -192,7 +196,7 @@ def detect_image():
     points_gained = disposal_category_points.get(category, 0)
 
     # updates Redis (other user data will become invalid)
-    increment_user_points(user_id, points_gained)
+    increment_user_points(user_id, points_gained, category)
 
     return jsonify({
         'type': category_to_name(category),
@@ -205,9 +209,9 @@ def detect_image():
 def route_leaderboard():
     users = [json.loads(r.get(u)) for u in r.scan_iter(match='user_stat/*')]
 
-    users_by_points = sorted(users, key=lambda u: u.get('total_points', 0))[:10]
+    users_by_points = sorted(users, key=lambda u: u.get('level', 0), reverse=True)[:10]
 
     return jsonify({
-        'leaderboard': [{'name': u['name'], 'points': u.get('total_points', 0)}
+        'leaderboard': [{'name': u['name'], 'level': u.get('level', 0)}
                         for u in users_by_points]
     })
