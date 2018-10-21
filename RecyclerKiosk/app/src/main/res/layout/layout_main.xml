@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignIn"
-    android:background="#003057">
+    android:background="#003057"
+    tools:context=".SignIn">
 
     <TextView
         android:id="@+id/textView"
@@ -44,7 +44,6 @@
     <ProgressBar
         android:id="@+id/backProgressBar"
         style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
-        android:progressDrawable="@drawable/curved_progress_bar_background"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -52,21 +51,23 @@
         android:layout_marginEnd="24dp"
         android:indeterminate="false"
         android:progress="100"
+        android:progressDrawable="@drawable/curved_progress_bar_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
+
     <ProgressBar
         android:id="@+id/xpProgressBar"
         style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
-        android:progressDrawable="@drawable/curved_progress_bar"
-        android:background="@drawable/background_progress_drawable"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="24dp"
+        android:background="@drawable/background_progress_drawable"
         android:indeterminate="false"
         android:progress="0"
+        android:progressDrawable="@drawable/curved_progress_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
@@ -82,7 +83,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/xpProgressBar" />
 
-    <android.support.v4.view.ViewPager
+    <View
+        android:id="@+id/whiteView"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:background="#EEEEEE"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/xpTextView" />
+
+    <!--<android.support.v4.view.ViewPager
         android:id="@+id/mainViewPager"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -90,19 +100,33 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="32dp"
-        android:background="#012949"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/xpTextView"/>
-<View
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#000000"
-    android:alpha="0.5"
-    android:clickable="true"
-    android:focusable="true"
-    android:id="@+id/grayView"/>
+        app:layout_constraintTop_toBottomOf="@+id/xpTextView" />-->
+    <com.yarolegovich.discretescrollview.DiscreteScrollView
+        android:id="@+id/mainViewPager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp"
+        app:dsv_orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/xpTextView" />
+    <!--android:background="#012949"-->
+
+    <View
+        android:id="@+id/grayView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.5"
+        android:background="#000000"
+        android:clickable="true"
+        android:elevation="3dp"
+        android:focusable="true" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabHelp"
         android:layout_width="wrap_content"
@@ -110,14 +134,15 @@
         android:layout_margin="16dp"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/outline_camera_white_18dp"
+        android:scaleX="1.1"
+        android:scaleY="1.1"
+        android:src="@drawable/outline_chat_white_18dp"
         app:fabSize="mini"
         app:layout_constraintBottom_toTopOf="@+id/fabCamera"
         app:layout_constraintEnd_toEndOf="@+id/fabMain"
         app:layout_constraintStart_toStartOf="@+id/fabMain"
-        android:scaleX="1.1"
-        android:scaleY="1.1"
         app:rippleColor="#FFFFFF" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabCamera"
         android:layout_width="wrap_content"
@@ -126,14 +151,15 @@
         android:layout_marginBottom="32dp"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/outline_camera_white_18dp"
         android:scaleX="1.1"
         android:scaleY="1.1"
+        android:src="@drawable/outline_camera_alt_white_18dp"
         app:fabSize="mini"
         app:layout_constraintBottom_toTopOf="@+id/fabMain"
         app:layout_constraintEnd_toEndOf="@+id/fabMain"
         app:layout_constraintStart_toStartOf="@+id/fabMain"
         app:rippleColor="#FFFFFF" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabMain"
         android:layout_width="wrap_content"
@@ -142,17 +168,18 @@
         android:layout_margin="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:src="@drawable/baseline_add_white_18dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:fabSize="normal"
         android:clickable="true"
         android:focusable="true"
-        app:rippleColor="#FFFFFF"
         android:scaleX="1.1"
-        android:scaleY="1.1"/>
+        android:scaleY="1.1"
+        android:src="@drawable/baseline_add_white_18dp"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:rippleColor="#FFFFFF" />
 
     <TextView
+        android:id="@+id/scanLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -162,8 +189,10 @@
         app:layout_constraintBottom_toBottomOf="@+id/fabCamera"
         app:layout_constraintEnd_toStartOf="@+id/fabCamera"
         app:layout_constraintTop_toTopOf="@+id/fabCamera"
-        android:id="@+id/scanLabel"/>
+        android:elevation="3dp"/>
+
     <TextView
+        android:id="@+id/chatLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -173,5 +202,5 @@
         app:layout_constraintBottom_toBottomOf="@+id/fabHelp"
         app:layout_constraintEnd_toStartOf="@+id/fabHelp"
         app:layout_constraintTop_toTopOf="@+id/fabHelp"
-        android:id="@+id/chatLabel"/>
+        android:elevation="3dp"/>
 </android.support.constraint.ConstraintLayout>

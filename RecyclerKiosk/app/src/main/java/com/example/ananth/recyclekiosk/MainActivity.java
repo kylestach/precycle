@@ -23,8 +23,12 @@ import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.yarolegovich.discretescrollview.DiscreteScrollView;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.observers.DisposableObserver;
 
 public class MainActivity extends AppCompatActivity {
     private ProgressBar xpProgressBar;
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_main);
+        NetworkManager.getLeaderboard();
         TextView name = findViewById(R.id.nameTextView);
         name.setText(DataManager.user.getName());
         getSupportActionBar().hide();
@@ -58,15 +63,58 @@ public class MainActivity extends AppCompatActivity {
         xpProgressBar.setProgress(0);
         animator.setStartDelay(1000);
         animator.start();
-        ViewPager pager = findViewById(R.id.mainViewPager);
+        //ViewPager pager = findViewById(R.id.mainViewPager);
+        DiscreteScrollView pager = findViewById(R.id.mainViewPager);
         ScreenSlidePagerAdapter adapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        pager.setAdapter(adapter);
+        //pager.setAdapter(adapter);
+        List<ScoreItem> tempData = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            tempData.add(new ScoreItem("Score " + i, i));
+        }
+        final List<ScorePageModel> modelList = new ArrayList<>();
+        modelList.add(new ScorePageModel(new ScoreAdapter(DataManager.user.getScoreItems(), MainActivity.this),"Breakdown"));
+        final ScoreAdapter leaderboard = new ScoreAdapter(new ArrayList<ScoreItem>(), MainActivity.this);
+        modelList.add(new ScorePageModel(leaderboard,"Leaderboard"));
+        NetworkManager.leaderboardInfoSubject.subscribe(new DisposableObserver<List<ScoreItem>>() {
+            @Override
+            public void onNext(List<ScoreItem> scoreItems) {
+                leaderboard.setData(scoreItems);
+            }
 
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+        NetworkManager.leaderboardErrorSubject.subscribe(new DisposableObserver<List<ScoreItem>>() {
+            @Override
+            public void onNext(List<ScoreItem> scoreItems) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+        pager.setAdapter(new ScoreListAdapter(modelList, MainActivity.this));
+        pager.setOverScrollEnabled(true);
         rotatedFab = false;
         final FloatingActionButton menuFAB = findViewById(R.id.fabMain);
         menuFAB.setSize(FloatingActionButton.SIZE_NORMAL);
         final View grayView = findViewById(R.id.grayView);
         grayView.setAlpha(0f);
+        grayView.setVisibility(View.GONE);
         final FloatingActionButton cameraFab = findViewById(R.id.fabCamera);
         final FloatingActionButton helpFab = findViewById(R.id.fabHelp);
         final TextView cameraLabel = findViewById(R.id.scanLabel);

@@ -38,7 +38,8 @@ public class SignIn extends AppCompatActivity {
         if (id != null) {
             signInProgress.setVisibility(View.VISIBLE);
             signInTextView.setVisibility(View.GONE);
-            NetworkManager.getUserInfo("https://stats.dev.hack.gt/api/user/"+id);
+            Log.v("stored","using stored id:"+id);
+            NetworkManager.getUserInfo("https://httpbin.info/user_stats?user="+id, id);
         }
         mAdapter = NfcAdapter.getDefaultAdapter(this);
         Log.v("nfc", "nfc enabled: " + mAdapter.isEnabled());
@@ -145,8 +146,9 @@ public class SignIn extends AppCompatActivity {
                 //Toast.makeText(this, "nfc enabled: " + uri.toString(), Toast.LENGTH_LONG).show();
                 signInProgress.setVisibility(View.VISIBLE);
                 signInTextView.setVisibility(View.GONE);
-                NetworkManager.getUserInfo("https://stats.dev.hack.gt/api/user/"+uri.toString().substring(uri.toString()
-                        .indexOf("user=")+5));
+                String id = uri.toString().substring(uri.toString()
+                        .indexOf("user=")+5);
+                NetworkManager.getUserInfo("https://httpbin.info/user_stats?user="+id, id);
                 Log.v("tag", "tag: " + uri.toString());
             }
             //Toast.makeText(this, "nfc enabled: "+tag.toString(),Toast.LENGTH_LONG).show();

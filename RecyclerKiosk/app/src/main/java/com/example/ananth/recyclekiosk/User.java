@@ -1,7 +1,18 @@
 package com.example.ananth.recyclekiosk;
 
+import java.util.List;
+
 public class User {
     private String name, email, school, major, id;
+    private List<ScoreItem> scoreItems;
+
+    public List<ScoreItem> getScoreItems() {
+        return scoreItems;
+    }
+
+    public void setScoreItems(List<ScoreItem> scoreItems) {
+        this.scoreItems = scoreItems;
+    }
 
     public String getName() {
         return name;
