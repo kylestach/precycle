@@ -58,7 +58,7 @@ public class CameraActivity extends AppCompatActivity {
     private PendingIntent mPendingIntent;
     private ValueAnimator animator;
     private boolean shouldScan;
-    private int kioskID = 0;
+    private int kioskID = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +100,7 @@ public class CameraActivity extends AppCompatActivity {
 
                 layout.findViewById(R.id.classificationText).setVisibility(View.GONE);
                 layout.findViewById(R.id.classificationProgressBar).setVisibility(View.VISIBLE);
+
                 new MaterialDialog.Builder(getSelf()).title("Classification").cancelable(false).canceledOnTouchOutside(false).positiveText("Finish").negativeText("Take Another").customView(layout.getRootView(), false).onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -127,6 +128,23 @@ public class CameraActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 layout.findViewById(R.id.classificationText).setVisibility(View.VISIBLE);
+                                if(kioskID!=-1) {
+                                    layout.findViewById(R.id.pointsText).setVisibility(View.VISIBLE);
+                                    layout.findViewById(R.id.pointsText).setAlpha(0f);
+                                    ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
+                                    animator.setStartDelay(250);
+                                    animator.setDuration(1000);
+                                    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                        @Override
+                                        public void onAnimationUpdate(ValueAnimator animation) {
+                                            layout.findViewById(R.id.pointsText).setAlpha((float) animation.getAnimatedValue());
+                                        }
+                                    });
+                                    animator.start();
+                                }
+                                else{
+                                    layout.findViewById(R.id.pointsText).setVisibility(View.GONE);
+                                }
                                 ((TextView)layout.findViewById(R.id.classificationText)).setText(classification);
                                 layout.findViewById(R.id.classificationProgressBar).setVisibility(View.GONE);
                             }
