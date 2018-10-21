@@ -31,7 +31,15 @@ public class SignIn extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_in_layout);
+        Log.v("signin","signin");
         final SharedPreferences preferences = getSharedPreferences("Preferences", Context.MODE_PRIVATE);
+        if(getIntent().getExtras() !=null){
+            if(getIntent().getExtras().getBoolean("reset")){
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("userID",null);
+                editor.commit();
+            }
+        }
         String id = preferences.getString("userID", null);
         signInTextView = findViewById(R.id.scanTextView);
         signInProgress = findViewById(R.id.scanProgress);
@@ -59,7 +67,7 @@ public class SignIn extends AppCompatActivity {
                         editor.apply();
                         DataManager.user = user;
                         startActivity(new Intent(SignIn.this, MainActivity.class));
-                        finish();
+                        //finish();
                     }
                 });
             }
@@ -117,6 +125,9 @@ public class SignIn extends AppCompatActivity {
     }
 
     private void intentHandler(Intent data) {
+        if (data.hasExtra("reset")){
+            super.onNewIntent(data);
+        }
         if(NetworkManager.retrievingUser){
             return;
         }

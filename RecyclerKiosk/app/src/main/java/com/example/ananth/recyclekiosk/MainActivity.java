@@ -32,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rbrooks.indefinitepagerindicator.IndefinitePagerIndicator;
 
@@ -46,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar xpProgressBar;
     private ValueAnimator animator;
     private boolean rotatedFab;
-    private TextView xpTextView,levelTextView;
-    private ScoreAdapter leaderboard,breakdown;
+    private TextView xpTextView, levelTextView;
+    private ScoreAdapter leaderboard, breakdown;
     private ValueAnimator cameraUpAnimator,
             cameraDownAnimator,
             helpUpAnimator,
@@ -58,9 +59,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        levelTextView.setText(DataManager.user.getLevel()+"");
-        xpTextView.setText(NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getHasPoints())+"/"+NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getLevelPoints()));
-        animator = ValueAnimator.ofInt(0, (int) (100*((double)DataManager.user.getHasPoints())/DataManager.user.getLevelPoints()));
+        levelTextView.setText(DataManager.user.getLevel() + "");
+        xpTextView.setText(NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getHasPoints()) + "/" + NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getLevelPoints()));
+        animator = ValueAnimator.ofInt(0, (int) (100 * ((double) DataManager.user.getHasPoints()) / DataManager.user.getLevelPoints()));
         animator.setDuration(1000);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -85,9 +86,9 @@ public class MainActivity extends AppCompatActivity {
         name.setText(DataManager.user.getName());
         getSupportActionBar().hide();
         levelTextView = findViewById(R.id.levelTextView);
-        levelTextView.setText(DataManager.user.getLevel()+"");
+        levelTextView.setText(DataManager.user.getLevel() + "");
         xpTextView = findViewById(R.id.xpTextView);
-        xpTextView.setText(NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getHasPoints())+"/"+NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getLevelPoints()));
+        xpTextView.setText(NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getHasPoints()) + "/" + NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getLevelPoints()));
         xpProgressBar = findViewById(R.id.xpProgressBar);
         xpProgressBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.buzzYellow), PorterDuff.Mode.SRC_IN);
         //xpProgressBar.setScaleY(2.0f);
@@ -120,9 +121,9 @@ public class MainActivity extends AppCompatActivity {
         }
         final List<ScorePageModel> modelList = new ArrayList<>();
         breakdown = new ScoreAdapter(DataManager.user.getScoreItems(), MainActivity.this);
-        modelList.add(new ScorePageModel(breakdown,"Breakdown"));
+        modelList.add(new ScorePageModel(breakdown, "Breakdown"));
         leaderboard = new ScoreAdapter(new ArrayList<ScoreItem>(), MainActivity.this);
-        modelList.add(new ScorePageModel(leaderboard,"Leaderboard"));
+        modelList.add(new ScorePageModel(leaderboard, "Leaderboard"));
         NetworkManager.leaderboardInfoSubject.subscribe(new DisposableObserver<List<ScoreItem>>() {
             @Override
             public void onNext(List<ScoreItem> scoreItems) {
@@ -185,10 +186,10 @@ public class MainActivity extends AppCompatActivity {
                 cameraLabel.setAlpha((float) animation.getAnimatedValue());
                 helpLabel.setAlpha((float) animation.getAnimatedValue());
                 signOutLabel.setAlpha((float) animation.getAnimatedValue());
-                if((float)animation.getAnimatedValue()==0) {
+                if ((float) animation.getAnimatedValue() == 0) {
                     grayView.setVisibility(View.VISIBLE);
                 }
-                grayView.setAlpha(((float) animation.getAnimatedValue())/2);
+                grayView.setAlpha(((float) animation.getAnimatedValue()) / 2);
             }
         });
         final ValueAnimator alphaInvisibleAnimator = ValueAnimator.ofFloat(1f, 0f);
@@ -201,8 +202,8 @@ public class MainActivity extends AppCompatActivity {
                 cameraLabel.setAlpha((float) animation.getAnimatedValue());
                 helpLabel.setAlpha((float) animation.getAnimatedValue());
                 signOutLabel.setAlpha((float) animation.getAnimatedValue());
-                grayView.setAlpha(((float) animation.getAnimatedValue())/2);
-                if((float)animation.getAnimatedValue()==0) {
+                grayView.setAlpha(((float) animation.getAnimatedValue()) / 2);
+                if ((float) animation.getAnimatedValue() == 0) {
                     grayView.setVisibility(View.GONE);
                 }
             }
@@ -210,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
         grayView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(rotatedFab) {
+                if (rotatedFab) {
                     final OvershootInterpolator interpolator = new OvershootInterpolator();
                     ViewCompat.animate(menuFAB).
                             rotation(0f).
@@ -381,7 +382,6 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.remove("userID");
                 editor.commit();
-                startActivity(new Intent(MainActivity.this, SignIn.class));
                 DataManager.user = null;
                 finish();
             }
