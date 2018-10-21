@@ -139,11 +139,12 @@ public class NetworkManager {
 
         String byteString = Base64.encodeToString(bytes, Base64.NO_WRAP);
 
-        String json= "{\"user\": "+DataManager.user.getId()+", \"kiosk_id\": "+kioskID+", \"image_data\": \""+byteString+"\"}";
+        String json= "{\"user\": \""+DataManager.user.getId()+"\", \"kiosk_id\": "+kioskID+", \"image_data\": \""+byteString+"\"}";
         Log.v("json",json);
         RequestBody body = RequestBody.create(JSON, json);
         final Request request = new Request.Builder()
                 .header("User-Agent","Bob")
+                .header("Content-Type","application/json")
                 .url("https://httpbin.info/image_detect")
                 .post(body)
                 .build();
