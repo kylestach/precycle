@@ -36,12 +36,14 @@ Example Response:
         "points": 23
       }
    ],
-   "total_points": 111
+   "total_points": 111,
+   "level": 5,
+   "level_required_points": 53
 }
 ```
 
 ### Detect Image
-`POST /detect_image`
+`POST /image_detect`
 
 Url Form Encoded Body:
 

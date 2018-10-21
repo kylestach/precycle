@@ -13,6 +13,9 @@ services:
     image: recycle-server
     environment:
       REDIS_URL: "redis://recycle_redis:6379/0"
+      GOOGLE_APPLICATION_CREDENTIALS: "/opt/park-secrets/parkrecycle-sakey.json"
+    volumes:
+      - "./secrets:/opt/park-secrets"
     ports:
       - "80:8000"
 
