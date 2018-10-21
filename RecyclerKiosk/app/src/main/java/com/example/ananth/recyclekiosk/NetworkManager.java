@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
@@ -27,7 +28,11 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class NetworkManager {
-    private static OkHttpClient client = new OkHttpClient();
+    private static OkHttpClient client = client = new OkHttpClient.Builder()
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .writeTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(0, TimeUnit.SECONDS)
+            .build();;
     public static BehaviorSubject<User> userBasicInfoSubject = BehaviorSubject.create();
     public static PublishSubject<User> userBasicInfoErrorSubject = PublishSubject.create();
     public static BehaviorSubject<List<ScoreItem>> leaderboardInfoSubject = BehaviorSubject.create();
