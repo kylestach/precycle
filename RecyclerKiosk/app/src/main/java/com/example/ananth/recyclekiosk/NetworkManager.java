@@ -131,7 +131,7 @@ public class NetworkManager {
                     JSONArray jsonArray = leaderboard.getJSONArray("leaderboard");
                     List<ScoreItem> list = new ArrayList<>();
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        list.add(new ScoreItem(jsonArray.getJSONObject(i).getString("name"),jsonArray.getJSONObject(i).getInt("points")));
+                        list.add(new ScoreItem(jsonArray.getJSONObject(i).getString("name"),jsonArray.getJSONObject(i).getInt("level")));
                     }
                     leaderboardInfoSubject.onNext(list);
                 } catch (JSONException e) {
@@ -178,7 +178,7 @@ public class NetworkManager {
                     String responseString = responseBody.string();
                     Log.v("response",responseString);
 
-                    classificationCallback.onFinished(new JSONObject(responseString).getString("type"));
+                    classificationCallback.onFinished(new Classification(new JSONObject(responseString).getString("type"),new JSONObject(responseString).getInt("points")));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

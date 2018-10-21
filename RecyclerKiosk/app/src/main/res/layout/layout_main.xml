@@ -24,7 +24,8 @@
         android:textSize="36sp"
         app:layout_constraintDimensionRatio="W,1:1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="4dp"/>
 
     <TextView
         android:id="@+id/nameTextView"
@@ -114,7 +115,21 @@
         android:clickable="true"
         android:elevation="3dp"
         android:focusable="true" />
-
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabSignOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:scaleX="1.1"
+        android:scaleY="1.1"
+        android:src="@drawable/outline_exit_to_app_white_18dp"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toTopOf="@+id/fabHelp"
+        app:layout_constraintEnd_toEndOf="@+id/fabMain"
+        app:layout_constraintStart_toStartOf="@+id/fabMain"
+        app:rippleColor="#FFFFFF" />
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabHelp"
         android:layout_width="wrap_content"
@@ -191,7 +206,18 @@
         app:layout_constraintEnd_toStartOf="@+id/fabHelp"
         app:layout_constraintTop_toTopOf="@+id/fabHelp"
         android:elevation="3dp"/>
-
+    <TextView
+        android:id="@+id/signOutLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="Sign Out"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/fabSignOut"
+        app:layout_constraintEnd_toStartOf="@+id/fabSignOut"
+        app:layout_constraintTop_toTopOf="@+id/fabSignOut"
+        android:elevation="3dp"/>
     <com.rbrooks.indefinitepagerindicator.IndefinitePagerIndicator
         android:id="@+id/recyclerviewPagerIndicator"
         android:layout_width="match_parent"
@@ -202,4 +228,12 @@
         app:layout_constraintTop_toBottomOf="@+id/mainViewPager"
         app:selectedDotColor="@color/colorAccent"
         app:dotColor="#003057"/>
+
+    <View
+        android:id="@+id/blueView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#003057"
+        android:elevation="3dp"
+        android:visibility="gone" />
 </android.support.constraint.ConstraintLayout>
