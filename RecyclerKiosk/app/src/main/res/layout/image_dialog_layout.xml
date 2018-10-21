@@ -54,7 +54,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="+5 Points"
+        android:text="+1 Point"
         android:textColor="#000000"
         android:textSize="18sp"
         android:visibility="gone"

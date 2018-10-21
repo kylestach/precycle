@@ -92,6 +92,9 @@ public class NetworkManager {
                 scores.add(new ScoreItem(item.getString("name"),item.getInt("points")));
             }
             user.setScoreItems(scores);
+            user.setLevel(obj.getInt("level"));
+            user.setLevelPoints(obj.getInt("level_required_points"));
+            user.setHasPoints(obj.getInt("total_points"));
             return user;
         } catch (JSONException e) {
             e.printStackTrace();
