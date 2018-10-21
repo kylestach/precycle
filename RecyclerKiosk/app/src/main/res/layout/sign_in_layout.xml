@@ -13,7 +13,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:gravity="center"
-        android:text="Hold your id to the back of your phone to sign in."
+        android:text="Hold your ID to the back of your phone to sign in."
         android:textColor="#000000"
         android:textSize="28sp"
         app:layout_constraintBottom_toBottomOf="parent"

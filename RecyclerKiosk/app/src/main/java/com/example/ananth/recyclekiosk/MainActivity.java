@@ -6,7 +6,10 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -15,7 +18,12 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
@@ -23,7 +31,7 @@ import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.yarolegovich.discretescrollview.DiscreteScrollView;
+import com.rbrooks.indefinitepagerindicator.IndefinitePagerIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,8 +72,12 @@ public class MainActivity extends AppCompatActivity {
         animator.setStartDelay(1000);
         animator.start();
         //ViewPager pager = findViewById(R.id.mainViewPager);
-        DiscreteScrollView pager = findViewById(R.id.mainViewPager);
-        ScreenSlidePagerAdapter adapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        RecyclerView recyclerView = findViewById(R.id.mainViewPager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        IndefinitePagerIndicator indefinitePagerIndicator = findViewById(R.id.recyclerviewPagerIndicator);
+        indefinitePagerIndicator.attachToRecyclerView(recyclerView);
+        SnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerView);
         //pager.setAdapter(adapter);
         List<ScoreItem> tempData = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
@@ -107,8 +119,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        pager.setAdapter(new ScoreListAdapter(modelList, MainActivity.this));
-        pager.setOverScrollEnabled(true);
+        recyclerView.setAdapter(new ScoreListAdapter(modelList, MainActivity.this));
+        //recyclerView.setOverScrollEnabled(true);
         rotatedFab = false;
         final FloatingActionButton menuFAB = findViewById(R.id.fabMain);
         menuFAB.setSize(FloatingActionButton.SIZE_NORMAL);
@@ -292,33 +304,4 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-        List<ScoreItem> tempData;
-
-        public ScreenSlidePagerAdapter(FragmentManager fm) {
-            super(fm);
-            tempData = new ArrayList<>();
-            for (int i = 0; i < 20; i++) {
-                tempData.add(new ScoreItem("Score " + i, i));
-            }
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            PersonalScoreFragment fragment = new PersonalScoreFragment();
-            fragment.setDataset(tempData);
-            if (position == 0) {
-                fragment.setTitle("My Items");
-            }
-            if (position == 1) {
-                fragment.setTitle("Leaderboard");
-            }
-            return fragment;
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-    }
 }

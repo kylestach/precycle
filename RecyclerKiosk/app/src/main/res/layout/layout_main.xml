@@ -92,25 +92,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/xpTextView" />
 
-    <!--<android.support.v4.view.ViewPager
-        android:id="@+id/mainViewPager"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/xpTextView" />-->
-    <com.yarolegovich.discretescrollview.DiscreteScrollView
+
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/mainViewPager"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="32dp"
-        app:dsv_orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -203,4 +191,15 @@
         app:layout_constraintEnd_toStartOf="@+id/fabHelp"
         app:layout_constraintTop_toTopOf="@+id/fabHelp"
         android:elevation="3dp"/>
+
+    <com.rbrooks.indefinitepagerindicator.IndefinitePagerIndicator
+        android:id="@+id/recyclerviewPagerIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainViewPager"
+        app:selectedDotColor="@color/colorAccent"
+        app:dotColor="#003057"/>
 </android.support.constraint.ConstraintLayout>
