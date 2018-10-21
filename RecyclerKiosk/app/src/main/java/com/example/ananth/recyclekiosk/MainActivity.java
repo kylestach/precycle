@@ -1,12 +1,19 @@
 package com.example.ananth.recyclekiosk;
 
 import android.animation.ValueAnimator;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.nfc.FormatException;
+import android.nfc.NdefMessage;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.Ndef;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,6 +43,7 @@ import android.widget.Toast;
 
 import com.rbrooks.indefinitepagerindicator.IndefinitePagerIndicator;
 
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
             helpDownAnimator,
             signUpAnimator,
             signDownAnimator;
+    private NfcAdapter mAdapter;
+    private PendingIntent mPendingIntent;
 
     @Override
     protected void onResume() {
@@ -75,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         xpProgressBar.setProgress(0);
         animator.setStartDelay(1000);
         animator.start();
+        mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
     }
 
     @Override
@@ -91,23 +102,11 @@ public class MainActivity extends AppCompatActivity {
         xpTextView.setText(NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getHasPoints()) + "/" + NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getLevelPoints()));
         xpProgressBar = findViewById(R.id.xpProgressBar);
         xpProgressBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.buzzYellow), PorterDuff.Mode.SRC_IN);
-        //xpProgressBar.setScaleY(2.0f);
-       /*
 
-        animator = ValueAnimator.ofInt(0, (int) (100*((double)DataManager.user.getHasPoints())/DataManager.user.getLevelPoints()));
-        animator.setDuration(1000);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                xpProgressBar.setProgress((int) animation.getAnimatedValue());
-            }
-        });
-        //xpProgressBar.setProgress(50);
+        mAdapter = NfcAdapter.getDefaultAdapter(this);
+        mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        intentHandler(getIntent());
 
-        xpProgressBar.setProgress(0);
-        animator.setStartDelay(1000);
-        animator.start();*/
-        //ViewPager pager = findViewById(R.id.mainViewPager);
         RecyclerView recyclerView = findViewById(R.id.mainViewPager);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         IndefinitePagerIndicator indefinitePagerIndicator = findViewById(R.id.recyclerviewPagerIndicator);
@@ -388,4 +387,57 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mAdapter.disableForegroundDispatch(this);
+    }
+
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        intentHandler(intent);
+    }
+
+    private void intentHandler(Intent data) {
+
+        //Get the tag from the given intent
+        Tag tag = data.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        if (tag != null) {
+            Ndef ndef = Ndef.get(tag);
+
+            Uri uri = null;
+
+            try {
+                ndef.connect();
+                NdefMessage message = ndef.getNdefMessage();
+                for (int i = 0; i < message.getRecords().length; i++) {
+                    if(message.getRecords()[i]!=null) {
+                        String msg = message.getRecords()[i].toString();
+                        String payload = new String(message.getRecords()[i].getPayload());
+                        int kioskID = Integer.parseInt(payload.substring(payload.indexOf("=")+1));
+                        Intent intent = new Intent(MainActivity.this, CameraActivity.class);
+                        intent.putExtra("kiosk",kioskID);
+                        startActivity(intent);
+                        Log.v("tag","toString: "+msg+"; payload:"+payload);
+                    }
+                }
+                ndef.close();
+            } catch (FormatException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (uri != null) {
+
+
+                Log.v("tag", "tag: " + uri.toString());
+            }
+            //Toast.makeText(this, "nfc enabled: "+tag.toString(),Toast.LENGTH_LONG).show();
+            Log.v("tag", "tag: " + tag.toString());
+        } else {
+            Log.v("tag", "no tag");
+        }
+    }
 }

@@ -68,6 +68,7 @@ public class CameraActivity extends AppCompatActivity {
         name.setText(DataManager.user.getName());
         final TextView levelTextView = findViewById(R.id.levelTextView);
         levelTextView.setText(DataManager.user.getLevel()+"");
+
         cameraView = findViewById(R.id.camera);
         cameraView.setLifecycleOwner(this);
         cameraView.mapGesture(Gesture.PINCH, GestureAction.ZOOM);
@@ -175,6 +176,12 @@ public class CameraActivity extends AppCompatActivity {
         });
         final ConstraintLayout cameraLayout = findViewById(R.id.cameraLayout);
         final AppCompatButton skipButton = findViewById(R.id.skipButton);
+        if(getIntent().getExtras()!=null){
+            kioskID = getIntent().getExtras().getInt("kiosk");
+            shouldScan = false;
+            cameraLayout.setVisibility(View.VISIBLE);
+            skipButton.setVisibility(View.GONE);
+        }
         animator = ValueAnimator.ofFloat(0f,1f);
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
