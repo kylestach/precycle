@@ -1,7 +1,9 @@
 package com.example.ananth.recyclekiosk;
 
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -49,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
     private ValueAnimator cameraUpAnimator,
             cameraDownAnimator,
             helpUpAnimator,
-            helpDownAnimator;
+            helpDownAnimator,
+            signUpAnimator,
+            signDownAnimator;
 
     @Override
     protected void onResume() {
@@ -76,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_main);
-        NetworkManager.getLeaderboard();
+        //NetworkManager.getLeaderboard();
         TextView name = findViewById(R.id.nameTextView);
         name.setText(DataManager.user.getName());
         getSupportActionBar().hide();
@@ -161,20 +165,26 @@ public class MainActivity extends AppCompatActivity {
         grayView.setVisibility(View.GONE);
         final FloatingActionButton cameraFab = findViewById(R.id.fabCamera);
         final FloatingActionButton helpFab = findViewById(R.id.fabHelp);
+        final FloatingActionButton signOutFab = findViewById(R.id.fabSignOut);
         final TextView cameraLabel = findViewById(R.id.scanLabel);
         final TextView helpLabel = findViewById(R.id.chatLabel);
+        final TextView signOutLabel = findViewById(R.id.signOutLabel);
         cameraFab.setAlpha(0f);
         helpFab.setAlpha(0f);
+        signOutFab.setAlpha(0f);
         cameraLabel.setAlpha(0f);
         helpLabel.setAlpha(0f);
+        signOutLabel.setAlpha(0f);
         final ValueAnimator alphaVisibleAnimator = ValueAnimator.ofFloat(0f, 1f);
         alphaVisibleAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 cameraFab.setAlpha((float) animation.getAnimatedValue());
                 helpFab.setAlpha((float) animation.getAnimatedValue());
+                signOutFab.setAlpha((float) animation.getAnimatedValue());
                 cameraLabel.setAlpha((float) animation.getAnimatedValue());
                 helpLabel.setAlpha((float) animation.getAnimatedValue());
+                signOutLabel.setAlpha((float) animation.getAnimatedValue());
                 if((float)animation.getAnimatedValue()==0) {
                     grayView.setVisibility(View.VISIBLE);
                 }
@@ -187,8 +197,10 @@ public class MainActivity extends AppCompatActivity {
             public void onAnimationUpdate(ValueAnimator animation) {
                 cameraFab.setAlpha((float) animation.getAnimatedValue());
                 helpFab.setAlpha((float) animation.getAnimatedValue());
+                signOutFab.setAlpha((float) animation.getAnimatedValue());
                 cameraLabel.setAlpha((float) animation.getAnimatedValue());
                 helpLabel.setAlpha((float) animation.getAnimatedValue());
+                signOutLabel.setAlpha((float) animation.getAnimatedValue());
                 grayView.setAlpha(((float) animation.getAnimatedValue())/2);
                 if((float)animation.getAnimatedValue()==0) {
                     grayView.setVisibility(View.GONE);
@@ -213,6 +225,8 @@ public class MainActivity extends AppCompatActivity {
                     cameraDownAnimator.start();
                     helpUpAnimator.cancel();
                     helpDownAnimator.start();
+                    signUpAnimator.cancel();
+                    signDownAnimator.start();
                 }
             }
         });
@@ -234,15 +248,19 @@ public class MainActivity extends AppCompatActivity {
                     cameraDownAnimator.start();
                     helpUpAnimator.cancel();
                     helpDownAnimator.start();
+                    signUpAnimator.cancel();
+                    signDownAnimator.start();
                 } else {
                     if (cameraUpAnimator == null) {
                         float cameraYOffset = menuFAB.getY() - cameraFab.getY();
                         cameraFab.setTranslationY(cameraYOffset);
                         float helpYOffset = menuFAB.getY() - helpFab.getY();
                         helpFab.setTranslationY(helpYOffset);
+                        float signYOffset = menuFAB.getY() - signOutFab.getY();
+                        signOutFab.setTranslationY(signYOffset);
                         cameraFab.setAlpha(0f);
                         helpFab.setAlpha(0f);
-
+                        signOutFab.setAlpha(0f);
                         cameraUpAnimator = ValueAnimator.ofFloat(cameraYOffset, 0f);
                         cameraUpAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                             @Override
@@ -275,6 +293,22 @@ public class MainActivity extends AppCompatActivity {
                                 helpLabel.setTranslationY((float) animation.getAnimatedValue());
                             }
                         });
+                        signUpAnimator = ValueAnimator.ofFloat(signYOffset, 0f);
+                        signUpAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                signOutFab.setTranslationY((float) animation.getAnimatedValue());
+                                signOutLabel.setTranslationY((float) animation.getAnimatedValue());
+                            }
+                        });
+                        signDownAnimator = ValueAnimator.ofFloat(0f, signYOffset);
+                        signDownAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                signOutFab.setTranslationY((float) animation.getAnimatedValue());
+                                signOutLabel.setTranslationY((float) animation.getAnimatedValue());
+                            }
+                        });
                     }
                     final OvershootInterpolator interpolator = new OvershootInterpolator();
                     ViewCompat.animate(menuFAB).
@@ -290,6 +324,8 @@ public class MainActivity extends AppCompatActivity {
                     cameraUpAnimator.start();
                     helpDownAnimator.cancel();
                     helpUpAnimator.start();
+                    signDownAnimator.cancel();
+                    signUpAnimator.start();
                 }
             }
         });
@@ -310,6 +346,8 @@ public class MainActivity extends AppCompatActivity {
                 cameraDownAnimator.start();
                 helpUpAnimator.cancel();
                 helpDownAnimator.start();
+                signUpAnimator.cancel();
+                signDownAnimator.start();
                 startActivity(new Intent(MainActivity.this, CameraActivity.class));
             }
         });
@@ -330,8 +368,22 @@ public class MainActivity extends AppCompatActivity {
                 cameraDownAnimator.start();
                 helpUpAnimator.cancel();
                 helpDownAnimator.start();
+                signUpAnimator.cancel();
+                signDownAnimator.start();
                 startActivity(new Intent(Intent.ACTION_VOICE_COMMAND)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            }
+        });
+        signOutFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final SharedPreferences preferences = getSharedPreferences("Preferences", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.remove("userID");
+                editor.commit();
+                startActivity(new Intent(MainActivity.this, SignIn.class));
+                DataManager.user = null;
+                finish();
             }
         });
     }
