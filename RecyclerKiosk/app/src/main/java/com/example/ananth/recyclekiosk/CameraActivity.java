@@ -159,8 +159,9 @@ public class CameraActivity extends AppCompatActivity {
                                     if(DataManager.user.getHasPoints()>=DataManager.user.getLevelPoints()){
                                         DataManager.user.setLevel(DataManager.user.getLevel()+1);
                                         DataManager.user.setHasPoints(DataManager.user.getHasPoints()-DataManager.user.getLevelPoints());
-                                        DataManager.user.setLevelPoints((int) (Math.pow(3.5*2,DataManager.user.getLevel()-1))+1);
+                                        DataManager.user.setLevelPoints((int) (2.5*Math.pow(2,DataManager.user.getLevel()-1))+1);
                                         levelTextView.setText(DataManager.user.getLevel()+"");
+                                        DataManager.levelUp = true;
                                     }
                                 }
                                 else{
