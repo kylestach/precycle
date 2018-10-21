@@ -127,7 +127,7 @@ public class CameraActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFinished(final String classification) {
+                    public void onFinished(final Classification classification) {
                         getSelf().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -138,6 +138,8 @@ public class CameraActivity extends AppCompatActivity {
                                     ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
                                     animator.setStartDelay(250);
                                     animator.setDuration(1000);
+                                    String s = (classification.getPoints()>1)?"s":"";
+                                    ((TextView)layout.findViewById(R.id.pointsText)).setText("+"+classification.getPoints()+" point"+s);
                                     animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                                         @Override
                                         public void onAnimationUpdate(ValueAnimator animation) {
@@ -148,14 +150,14 @@ public class CameraActivity extends AppCompatActivity {
                                     DataManager.user.setHasPoints(DataManager.user.getHasPoints()+1);
                                     for (int i = 0; i < DataManager.user.getScoreItems().size(); i++) {
                                         if(DataManager.user.getScoreItems().get(i).getTitle().equals(classification)){
-                                            DataManager.user.getScoreItems().get(i).setScore(DataManager.user.getScoreItems().get(i).getScore()+1);
+                                            DataManager.user.getScoreItems().get(i).setScore(DataManager.user.getScoreItems().get(i).getScore()+classification.getPoints());
                                             break;
                                         }
                                     }
 
-                                    if(DataManager.user.getHasPoints()==DataManager.user.getLevelPoints()){
+                                    if(DataManager.user.getHasPoints()>=DataManager.user.getLevelPoints()){
                                         DataManager.user.setLevel(DataManager.user.getLevel()+1);
-                                        DataManager.user.setHasPoints(0);
+                                        DataManager.user.setHasPoints(DataManager.user.getHasPoints()-DataManager.user.getLevelPoints());
                                         DataManager.user.setLevelPoints((int) (Math.pow(3.5*2,DataManager.user.getLevel()-1))+1);
                                         levelTextView.setText(DataManager.user.getLevel()+"");
                                     }
@@ -163,7 +165,7 @@ public class CameraActivity extends AppCompatActivity {
                                 else{
                                     layout.findViewById(R.id.pointsText).setVisibility(View.GONE);
                                 }
-                                ((TextView)layout.findViewById(R.id.classificationText)).setText(classification);
+                                ((TextView)layout.findViewById(R.id.classificationText)).setText(classification.getClassification());
                                 layout.findViewById(R.id.classificationProgressBar).setVisibility(View.GONE);
                             }
                         });

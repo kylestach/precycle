@@ -178,7 +178,7 @@ public class NetworkManager {
                     String responseString = responseBody.string();
                     Log.v("response",responseString);
 
-                    classificationCallback.onFinished(new JSONObject(responseString).getString("type"));
+                    classificationCallback.onFinished(new Classification(new JSONObject(responseString).getString("type"),new JSONObject(responseString).getInt("points")));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
