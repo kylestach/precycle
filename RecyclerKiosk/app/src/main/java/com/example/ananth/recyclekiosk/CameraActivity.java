@@ -148,9 +148,9 @@ public class CameraActivity extends AppCompatActivity {
                                         }
                                     });
                                     animator.start();
-                                    DataManager.user.setHasPoints(DataManager.user.getHasPoints()+1);
+                                    DataManager.user.setHasPoints(DataManager.user.getHasPoints()+classification.getPoints());
                                     for (int i = 0; i < DataManager.user.getScoreItems().size(); i++) {
-                                        if(DataManager.user.getScoreItems().get(i).getTitle().equals(classification)){
+                                        if(DataManager.user.getScoreItems().get(i).getTitle().equals(classification.getClassification())){
                                             DataManager.user.getScoreItems().get(i).setScore(DataManager.user.getScoreItems().get(i).getScore()+classification.getPoints());
                                             break;
                                         }

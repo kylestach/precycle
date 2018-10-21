@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean rotatedFab;
     private TextView xpTextView, levelTextView;
     private ScoreAdapter leaderboard, breakdown;
+    private View blueView;
     private ValueAnimator cameraUpAnimator,
             cameraDownAnimator,
             helpUpAnimator,
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         xpTextView.setText(NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getHasPoints()) + "/" + NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getLevelPoints()));
         xpProgressBar = findViewById(R.id.xpProgressBar);
         xpProgressBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.buzzYellow), PorterDuff.Mode.SRC_IN);
-
+        blueView = findViewById(R.id.blueView);
         mAdapter = NfcAdapter.getDefaultAdapter(this);
         mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
         intentHandler(getIntent());
@@ -125,8 +126,13 @@ public class MainActivity extends AppCompatActivity {
         modelList.add(new ScorePageModel(leaderboard, "Leaderboard"));
         NetworkManager.leaderboardInfoSubject.subscribe(new DisposableObserver<List<ScoreItem>>() {
             @Override
-            public void onNext(List<ScoreItem> scoreItems) {
-                leaderboard.setData(scoreItems);
+            public void onNext(final List<ScoreItem> scoreItems) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        leaderboard.setData(scoreItems);
+                    }
+                });
             }
 
             @Override
@@ -234,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (rotatedFab) {
+                    animateLevelUp();
                     final OvershootInterpolator interpolator = new OvershootInterpolator();
                     ViewCompat.animate(menuFAB).
                             rotation(0f).
@@ -394,7 +401,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onNewIntent(Intent intent) {
         intentHandler(intent);
@@ -413,14 +419,14 @@ public class MainActivity extends AppCompatActivity {
                 ndef.connect();
                 NdefMessage message = ndef.getNdefMessage();
                 for (int i = 0; i < message.getRecords().length; i++) {
-                    if(message.getRecords()[i]!=null) {
+                    if (message.getRecords()[i] != null) {
                         String msg = message.getRecords()[i].toString();
                         String payload = new String(message.getRecords()[i].getPayload());
-                        int kioskID = Integer.parseInt(payload.substring(payload.indexOf("=")+1));
+                        int kioskID = Integer.parseInt(payload.substring(payload.indexOf("=") + 1));
                         Intent intent = new Intent(MainActivity.this, CameraActivity.class);
-                        intent.putExtra("kiosk",kioskID);
+                        intent.putExtra("kiosk", kioskID);
                         startActivity(intent);
-                        Log.v("tag","toString: "+msg+"; payload:"+payload);
+                        Log.v("tag", "toString: " + msg + "; payload:" + payload);
                     }
                 }
                 ndef.close();
@@ -439,5 +445,71 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.v("tag", "no tag");
         }
+    }
+
+    private void animateLevelUp() {
+        int mWidth = this.getResources().getDisplayMetrics().widthPixels/2;
+        int mHeight = this.getResources().getDisplayMetrics().heightPixels/2;
+        float xOffset = mWidth - levelTextView.getX()-levelTextView.getWidth()/2;
+        float yOffset = mHeight - levelTextView.getY()-levelTextView.getHeight();
+        blueView.setVisibility(View.VISIBLE);
+        blueView.setAlpha(0f);
+        final ValueAnimator blueIn = ValueAnimator.ofFloat(0f,1f);
+        blueIn.setDuration(1000);
+        blueIn.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                blueView.setAlpha((float)animation.getAnimatedValue());
+            }
+        });
+        final ValueAnimator blueOut = ValueAnimator.ofFloat(1f,0f);
+        blueOut.setDuration(1000);
+        blueOut.setStartDelay(2000);
+        blueOut.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                blueView.setAlpha((float)animation.getAnimatedValue());
+            }
+        });
+        ValueAnimator xAnimate = ValueAnimator.ofFloat(0, xOffset);
+        ValueAnimator yAnimate = ValueAnimator.ofFloat(0, yOffset);
+        xAnimate.setDuration(1000);
+        yAnimate.setDuration(1000);
+        xAnimate.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                levelTextView.setTranslationX((float) animation.getAnimatedValue());
+            }
+        });
+        yAnimate.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                levelTextView.setTranslationY((float) animation.getAnimatedValue());
+            }
+        });
+        ValueAnimator xAnimate2 = ValueAnimator.ofFloat(xOffset, 0);
+        ValueAnimator yAnimate2 = ValueAnimator.ofFloat(yOffset, 0);
+        xAnimate2.setDuration(1000);
+        yAnimate2.setDuration(1000);
+        xAnimate2.setStartDelay(2000);
+        yAnimate2.setStartDelay(2000);
+        xAnimate2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                levelTextView.setTranslationX((float) animation.getAnimatedValue());
+            }
+        });
+        yAnimate2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                levelTextView.setTranslationY((float) animation.getAnimatedValue());
+            }
+        });
+        xAnimate.start();
+        yAnimate.start();
+        xAnimate2.start();
+        yAnimate2.start();
+        blueIn.start();
+        blueOut.start();
     }
 }
