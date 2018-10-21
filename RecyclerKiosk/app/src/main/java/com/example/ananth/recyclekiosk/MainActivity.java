@@ -44,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar xpProgressBar;
     private ValueAnimator animator;
     private boolean rotatedFab;
-    private TextView xpTextView;
+    private TextView xpTextView,levelTextView;
+    private ScoreAdapter leaderboard,breakdown;
     private ValueAnimator cameraUpAnimator,
             cameraDownAnimator,
             helpUpAnimator,
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        levelTextView.setText(DataManager.user.getLevel()+"");
         xpTextView.setText(NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getHasPoints())+"/"+NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getLevelPoints()));
         animator = ValueAnimator.ofInt(0, (int) (100*((double)DataManager.user.getHasPoints())/DataManager.user.getLevelPoints()));
         animator.setDuration(1000);
@@ -63,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //xpProgressBar.setProgress(50);
-
+        breakdown.updateData(DataManager.user.getScoreItems());
+        NetworkManager.getLeaderboard();
         xpProgressBar.setProgress(0);
         animator.setStartDelay(1000);
         animator.start();
@@ -77,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         TextView name = findViewById(R.id.nameTextView);
         name.setText(DataManager.user.getName());
         getSupportActionBar().hide();
-        TextView levelTextView = findViewById(R.id.levelTextView);
+        levelTextView = findViewById(R.id.levelTextView);
         levelTextView.setText(DataManager.user.getLevel()+"");
         xpTextView = findViewById(R.id.xpTextView);
         xpTextView.setText(NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getHasPoints())+"/"+NumberFormat.getNumberInstance(Locale.US).format(DataManager.user.getLevelPoints()));
@@ -112,8 +115,9 @@ public class MainActivity extends AppCompatActivity {
             tempData.add(new ScoreItem("Score " + i, i));
         }
         final List<ScorePageModel> modelList = new ArrayList<>();
-        modelList.add(new ScorePageModel(new ScoreAdapter(DataManager.user.getScoreItems(), MainActivity.this),"Breakdown"));
-        final ScoreAdapter leaderboard = new ScoreAdapter(new ArrayList<ScoreItem>(), MainActivity.this);
+        breakdown = new ScoreAdapter(DataManager.user.getScoreItems(), MainActivity.this);
+        modelList.add(new ScorePageModel(breakdown,"Breakdown"));
+        leaderboard = new ScoreAdapter(new ArrayList<ScoreItem>(), MainActivity.this);
         modelList.add(new ScorePageModel(leaderboard,"Leaderboard"));
         NetworkManager.leaderboardInfoSubject.subscribe(new DisposableObserver<List<ScoreItem>>() {
             @Override

@@ -17,12 +17,24 @@ import java.util.List;
 public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ViewHolder> {
     private List<ScoreItem> mDataset;
     private Context context;
+
     public ScoreAdapter(List<ScoreItem> list, Context context) {
         mDataset = list;
         this.context = context;
     }
-    public void setData(List<ScoreItem> list){
+
+    public void setData(List<ScoreItem> list) {
         mDataset = list;
+        notifyDataSetChanged();
+    }
+
+    public void updateData(List<ScoreItem> items) {
+        for (ScoreItem scoreItem:items) {
+            int index = mDataset.indexOf(scoreItem);
+            if (index != -1) {
+                mDataset.get(index).setScore(scoreItem.getScore());
+            }
+        }
         notifyDataSetChanged();
     }
 
@@ -35,7 +47,7 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        viewHolder.scoreTextView.setText(mDataset.get(i).getScore()+"");
+        viewHolder.scoreTextView.setText(mDataset.get(i).getScore() + "");
         viewHolder.titleTextView.setText(mDataset.get(i).getTitle());
         //setAnimation(viewHolder.layout, i);
     }
@@ -45,22 +57,23 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ViewHolder> 
         return mDataset.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView titleTextView, scoreTextView;
         private ConstraintLayout layout;
-        public ViewHolder(View v){
+
+        public ViewHolder(View v) {
             super(v);
             titleTextView = v.findViewById(R.id.title);
             scoreTextView = v.findViewById(R.id.score);
-            layout = (ConstraintLayout)v;
+            layout = (ConstraintLayout) v;
         }
     }
+
     private int lastPosition = -1;
-    private void setAnimation(View viewToAnimate, int position)
-    {
+
+    private void setAnimation(View viewToAnimate, int position) {
         // If the bound view wasn't previously displayed on screen, it's animated
-        if (position > lastPosition)
-        {
+        if (position > lastPosition) {
             Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;

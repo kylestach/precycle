@@ -146,6 +146,13 @@ public class CameraActivity extends AppCompatActivity {
                                     });
                                     animator.start();
                                     DataManager.user.setHasPoints(DataManager.user.getHasPoints()+1);
+                                    for (int i = 0; i < DataManager.user.getScoreItems().size(); i++) {
+                                        if(DataManager.user.getScoreItems().get(i).getTitle().equals(classification)){
+                                            DataManager.user.getScoreItems().get(i).setScore(DataManager.user.getScoreItems().get(i).getScore()+1);
+                                            break;
+                                        }
+                                    }
+
                                     if(DataManager.user.getHasPoints()==DataManager.user.getLevelPoints()){
                                         DataManager.user.setLevel(DataManager.user.getLevel()+1);
                                         DataManager.user.setHasPoints(0);
