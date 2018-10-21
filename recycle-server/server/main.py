@@ -10,9 +10,30 @@ r = redis.from_url(redis_url, decode_responses=True)
 
 app = Flask(__name__)
 
+GOOGLE_PROJECT_ID = 'parkrecycle-220001'
+GOOGLE_MODEL_ID = 'plastic_bottles_v20181020165932'
+
+
+classification_categories = {
+    'food': 'compost',
+    'plastic': 'plastic',
+    'plates': 'compost',
+    'soda_can': 'aluminum',
+    'trash': 'trash'
+}
+disposal_categories = ['compost', 'trash', 'aluminum', 'plastic']
+
 
 def fail(message, code=500):
     return jsonify({'success': False, 'message': message}), code
+
+
+def set_kiosk_lights(kiosk_id, disposal_category, valid_for=5):
+    try:
+        category_idx = disposal_categories.index(disposal_category)
+        r.set('kiosk_lights/{}'.format(kiosk_id), json.dumps([category_idx]), ex=valid_for)
+    except ValueError:
+        pass
 
 
 @app.route('/')
@@ -52,7 +73,25 @@ def route_stats():
 
     r.set('user_stat/{}'.format(user_id), json.dumps(data))
 
+    # ensure an entry for every disposal category in the response
+    disposal_types = data['disposal_types']
+    disposal_type_names = [x['name'] for x in disposal_types]
+    for category in disposal_categories:
+        if category not in disposal_type_names:
+            disposal_types.append({'name': category, 'points': 0})
+
     return jsonify(data)
+
+
+@app.route('/kiosk/<int:kiosk_id>')
+def route_kiosk(kiosk_id):
+    lit_list = r.get('kiosk_lights/{}'.format(kiosk_id))
+    if lit_list is not None:
+        lit_list = json.loads(lit_list)
+    else:
+        lit_list = []
+
+    return jsonify({'lit': lit_list})
 
 
 @app.route('/leaderboard')

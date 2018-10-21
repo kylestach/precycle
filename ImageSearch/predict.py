@@ -1,17 +1,17 @@
 import sys
 
 from google.cloud import automl
-from google.cloud.automl_v1beta1.proto import service_pb2
 
 
 def get_prediction(content, project_id, model_id):
-  prediction_client = automl.PredictionServiceClient()
+    prediction_client = automl.PredictionServiceClient()
 
-  name = 'projects/{}/locations/us-central1/models/{}'.format(project_id, model_id)
-  payload = {'image': {'image_bytes': content }}
-  params = {}
-  request = prediction_client.predict(name, payload, params)
-  return request  # waits till request is returned
+    name = 'projects/{}/locations/us-central1/models/{}'.format(project_id, model_id)
+    payload = {'image': {'image_bytes': content}}
+    params = {}
+    request = prediction_client.predict(name, payload, params)
+    return request  # waits till request is returned
+
 
 if __name__ == '__main__':
     file_path = sys.argv[1]
@@ -21,4 +21,4 @@ if __name__ == '__main__':
     with open(file_path, 'rb') as ff:
         content = ff.read()
 
-    print(get_prediction(content, project_id,  model_id))
+    print(get_prediction(content, project_id, model_id))
