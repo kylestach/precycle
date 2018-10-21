@@ -1,9 +1,20 @@
 version: '3'
 
 services:
+  recycle_redis:
+    image: redis
+    command: "redis-server --appendonly yes"
+    volumes:
+      - "redis_data:/data"
+    ports:
+      - "6379"
+
   recycle_server:
     image: recycle-server
+    environment:
+      REDIS_URL: "redis://recycle_redis:6379/0"
     ports:
       - "80:8000"
 
-
+volumes:
+  redis_data:
