@@ -3,7 +3,9 @@ import os
 
 import redis
 import requests
+import base64
 from flask import Flask, request, jsonify
+from server.predict import get_prediction
 
 redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
 r = redis.from_url(redis_url, decode_responses=True)
@@ -93,6 +95,14 @@ def route_kiosk(kiosk_id):
 
     return jsonify({'lit': lit_list})
 
+
+@app.route('/image_detect', methods=['POST'])
+def detect_image():
+    data = request.json
+    image_bytes = base64.b64decode(data['image']['image_bytes'])
+    prediction = get_prediction(image_bytes, GOOGLE_PROJECT_ID, GOOGLE_MODEL_ID)
+    print(prediction)
+    return jsonify({'detected': prediction.payload['display_name']})
 
 @app.route('/leaderboard')
 def route_leaderboard():
