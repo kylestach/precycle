@@ -67,7 +67,7 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onPictureTaken(byte[] jpeg) {
                 super.onPictureTaken(jpeg);
-                ConstraintLayout layout = (ConstraintLayout) getLayoutInflater().inflate(R.layout.image_dialog_layout, null);
+                final ConstraintLayout layout = (ConstraintLayout) getLayoutInflater().inflate(R.layout.image_dialog_layout, null);
                 cameraView.stop();
                 //Bitmap bitmap = BitmapFactory.decodeByteArray(jpeg, 0, jpeg.length);
                 String s = "";
@@ -94,8 +94,26 @@ public class CameraActivity extends AppCompatActivity {
                         finish();
                     }
                 }).show();
-                byte[] stuff = Base64.encode(jpeg, Base64.NO_PADDING | Base64.URL_SAFE);
 
+                //byte[] stuff = Base64.encode(jpeg, Base64.NO_PADDING);
+                NetworkManager.getClassification(jpeg, -1, new ClassificationCallback() {
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+
+                    @Override
+                    public void onFinished(final String classification) {
+                        getSelf().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                layout.findViewById(R.id.classificationText).setVisibility(View.VISIBLE);
+                                ((TextView)layout.findViewById(R.id.classificationText)).setText(classification);
+                                layout.findViewById(R.id.classificationProgressBar).setVisibility(View.GONE);
+                            }
+                        });
+                    }
+                });
             }
         });
 

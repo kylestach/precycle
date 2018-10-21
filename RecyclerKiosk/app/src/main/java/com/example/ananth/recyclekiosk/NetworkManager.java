@@ -1,6 +1,7 @@
 package com.example.ananth.recyclekiosk;
 
 import android.net.Uri;
+import android.util.Base64;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -9,15 +10,19 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.Headers;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
@@ -41,7 +46,6 @@ public class NetworkManager {
                 userBasicInfoErrorSubject.onNext(new User());
                 e.printStackTrace();
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
@@ -122,6 +126,50 @@ public class NetworkManager {
                         list.add(new ScoreItem(jsonArray.getJSONObject(i).getString("name"),jsonArray.getJSONObject(i).getInt("points")));
                     }
                     leaderboardInfoSubject.onNext(list);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
+
+    public static void getClassification(byte[] bytes, int kioskID, final ClassificationCallback classificationCallback) {
+
+        String byteString = Base64.encodeToString(bytes, Base64.NO_WRAP);
+
+        String json= "{\"user\": "+DataManager.user.getId()+", \"kiosk_id\": "+kioskID+", \"image_data\": \""+byteString+"\"}";
+        Log.v("json",json);
+        RequestBody body = RequestBody.create(JSON, json);
+        final Request request = new Request.Builder()
+                .header("User-Agent","Bob")
+                .url("https://httpbin.info/image_detect")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                classificationCallback.onError(e);
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try (ResponseBody responseBody = response.body()) {
+                    if (!response.isSuccessful()) {
+                        classificationCallback.onError(new IOException());
+                        throw new IOException("Unexpected code " + response);
+                    }
+                    Headers responseHeaders = response.headers();
+                    for (int i = 0, size = responseHeaders.size(); i < size; i++) {
+                        System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                    }
+                    String responseString = responseBody.string();
+                    Log.v("response",responseString);
+
+                    classificationCallback.onFinished(new JSONObject(responseString).getString("type"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
